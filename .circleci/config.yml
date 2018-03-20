@@ -56,9 +56,9 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "d9:30:4c:1d:4a:83:85:e7:9b:27:67:cd:01:b1:15:a3"
-      - run: sudo npm install syncano-cli@0.55.0 -g
-      - run: SYNCANO_AUTH_KEY=$SYNCANO_AUTH_KEY SYNCANO_HOST=api.syncano.io syncano-cli submit ${SOCKET_NAME} -b patch
-      - run: SYNCANO_AUTH_KEY=$SYNCANO_AUTH_KEY SYNCANO_HOST=api.syncano.io syncano-cli publish ${SOCKET_NAME}
+      - run: sudo npm install @syncano/cli -g
+      - run: SYNCANO_AUTH_KEY=$SYNCANO_AUTH_KEY SYNCANO_HOST=api.syncano.io npx s submit ${SOCKET_NAME} -b patch
+      - run: SYNCANO_AUTH_KEY=$SYNCANO_AUTH_KEY SYNCANO_HOST=api.syncano.io npx s publish ${SOCKET_NAME}
       - run:
           name: Avoid hosts unknown for github
           command: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
