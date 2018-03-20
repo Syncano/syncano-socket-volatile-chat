@@ -1,0 +1,78 @@
+name: volatile-chat
+description: Chat socket using Using Syncano realtime feature
+version: 0.0.1
+runtime: nodejs_v8
+keywords:
+  - chat
+  - realtime
+  - group-chat
+
+endpoints:
+  send-message-group:
+    description: Endpoint to send message to a room
+    parameters:
+      username:
+        type: string
+        description: Name of the User.
+        example: Adam Nik
+      message_text:
+        type: string
+        description: Content of the message.
+        example: How are you doing.
+      room:
+        type: string
+        description:  Name of group, should only contain url friendly characters.
+        example: group_sports
+    response:
+      mimetype: application/json
+      examples:
+        - exit_code: 200
+          description: Successfully published message
+          example: |
+            {
+              "message_text": "How are you doing",
+              "username": "Adam Nik"
+            }
+        - exit_code: 400
+          description: Error
+          example: |
+            {
+              "message": "Failed to publish message"
+            }
+  group-chat:
+    channel: group.{room}
+    description: Endpoint to subcribe to poll for a group messages. Example group.group_sports
+
+  send-message-private:
+    description: Endpoint to send private message to user
+    parameters:
+      chat_message:
+        type: text
+        description: Chat message
+        example: How are you
+      user_key:
+        type: string
+        description: Token of user sending message
+        example: user-token
+      message_to:
+        type: string
+        description: User sending message to
+        example: messageTo@gmail.com
+    response:
+      mimetype: application/json
+      examples:
+        - exit_code: 200
+          description: Group created
+          example: |
+            {
+              "message": "User added successfully"
+            }
+        - exit_code: 400
+          description: Error
+          example: |
+            {
+              "message": "Failed to add user to chat group"
+            }
+  private-chat:
+    channel: messages.{user}
+    description: Endpoint to listen to user private message.
