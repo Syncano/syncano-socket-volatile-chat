@@ -3,18 +3,19 @@ import Syncano from '@syncano/core';
 import validateRequired from './utils/helpers';
 
 export default async (ctx) => {
-  const { response, users, channel } = new Syncano(ctx);
-  const { chat_message, message_to } = ctx.args;
+  const { response, channel } = new Syncano(ctx);
+  const { message_text, message_to } = ctx.args;
+  const { user } = ctx.meta;
 
-  if (users) {
-    console.log(users.instance.meta.user, '>>>>>>>>');
+  if (!user) {
+    return response.json({ message: 'Unauthorized' }, 401);
   }
 
   try {
-    validateRequired({ chat_message, message_to });
-    const publishedMessage = await channel.publish(`messages.${message_to}`,
-      { chat_message, message_to, author: 'user_key' });
-    return response.json({ publishedMessage }, 200);
+    validateRequired({ message_text, message_to });
+    const { payload } = await channel.publish(`messages.${message_to}`,
+      { message_text, message_to, message_from: user.username });
+    return response.json(payload, 200);
   } catch ({ message, details }) {
     if (details) {
       return response.json({ message, details }, 400);

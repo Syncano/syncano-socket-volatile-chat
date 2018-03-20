@@ -4,13 +4,15 @@ import validateRequired from './utils/helpers';
 
 export default async (ctx) => {
   const { response, channel } = new Syncano(ctx);
-  const { username, message_text, room } = ctx.args;
+  const { username: sendingUser, message_text, room } = ctx.args;
+  const { user } = ctx.meta;
 
   try {
-    validateRequired({ username, message_text, room });
+    const username = (user) ? user.username : sendingUser;
+    validateRequired({ message_text, room, username });
 
-    const result = await channel.publish(`group.${room}`, { username, message_text });
-    return response.json(result, 200);
+    const { payload, room: group } = await channel.publish(`group.${room}`, { message_from: username, message_text });
+    return response.json({ group, payload }, 200);
   } catch ({ message, details }) {
     if (details) {
       return response.json({ message, details }, 400);

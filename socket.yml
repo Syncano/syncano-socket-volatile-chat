@@ -1,41 +1,53 @@
 name: volatile-chat
-description: Chat socket using Using Syncano realtime feature
+description: Volatile chat socket using using Syncano realtime feature
 version: 0.0.1
 runtime: nodejs_v8
 keywords:
   - chat
   - realtime
   - group-chat
+  - private-chat
 
 endpoints:
   send-message-group:
     description: Endpoint to send message to a room
-    parameters:
-      username:
-        type: string
-        description: Name of the User.
-        example: Adam Nik
-      message_text:
-        type: string
-        description: Content of the message.
-        example: How are you doing.
-      room:
-        type: string
-        description:  Name of group, should only contain url friendly characters.
-        example: group_sports
-    response:
-      mimetype: application/json
-      examples:
-        - exit_code: 200
-          description: Successfully published message
-          example: |
+    inputs:
+      properties:
+        _user_key:
+          type: string
+          description: Token of user sending message (Optional)
+          examples:
+            - messageFrom@gmail.com
+        username:
+          type: string
+          description: Name of the User (Required only when user token not sent).
+          examples:
+            - Nik
+        message_text:
+          type: string
+          description: Content of the message.
+          examples:
+            - How are you doing.
+        room:
+          type: string
+          description:  Name of group, should only contain url friendly characters.
+          examples:
+            - group_sports
+    outputs:
+      success:
+        exit_code: 200
+        description: Success
+        examples:
+          - |
             {
               "message_text": "How are you doing",
-              "username": "Adam Nik"
+              "username": "Nik"
             }
-        - exit_code: 400
-          description: Error
-          example: |
+      fail:
+        exit_code: 400
+        description: Failed
+        examples:
+          - |
             {
               "message": "Failed to publish message"
             }
@@ -45,34 +57,43 @@ endpoints:
 
   send-message-private:
     description: Endpoint to send private message to user
-    parameters:
-      chat_message:
-        type: text
-        description: Chat message
-        example: How are you
-      user_key:
-        type: string
-        description: Token of user sending message
-        example: user-token
-      message_to:
-        type: string
-        description: User sending message to
-        example: messageTo@gmail.com
-    response:
-      mimetype: application/json
-      examples:
-        - exit_code: 200
-          description: Group created
-          example: |
+    inputs:
+      properties:
+        message_text:
+          type: string
+          description: Chat message
+          examples:
+            - How are you
+        _user_key:
+          type: string
+          description: Token of user sending message
+          examples:
+            - messageFrom@gmail.com
+        message_to:
+          type: string
+          description: Username of user to receive message
+          examples:
+            - messageTo@gmail.com
+    outputs:
+      success:
+        exit_code: 200
+        description: Success
+        examples:
+          - |
             {
-              "message": "User added successfully"
+              "message_text": "How are you doing",
+              "message_to": "messageTo@gmail.com"
+              "message_from": "messageFrom@gmail.com"
             }
-        - exit_code: 400
-          description: Error
-          example: |
+      fail:
+        exit_code: 400
+        description: Failed
+        examples:
+          - |
             {
-              "message": "Failed to add user to chat group"
+              "message": "Failed to send message"
             }
+
   private-chat:
     channel: messages.{user}
     description: Endpoint to listen to user private message.
