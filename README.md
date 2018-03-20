@@ -1,5 +1,7 @@
 # volatile-chat
 
+[![CircleCI](https://circleci.com/gh/Syncano/syncano-socket-volatile-chat.svg?style=svg)](https://circleci.com/gh/Syncano/syncano-socket-volatile-chat)
+
 `version:` **0.0.1**
 
 Volatile chat socket using using Syncano realtime feature
