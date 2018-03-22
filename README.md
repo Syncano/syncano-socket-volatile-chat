@@ -9,7 +9,7 @@ Volatile chat socket using using Syncano realtime feature
 To install, run:
 
 ```
-syncano-cli add volatile-chat
+npx s add volatile-chat
 ```
 
 ## Endpoints
